@@ -14,6 +14,7 @@ export const kk: Record<Key, string> = {
   "common.retry": "Қайталау",
   "common.error": "Болмады. Қайта көріңіз",
   "common.offline": "Fibo серверімен байланыс жоқ",
+  "auth.apiUnavailable": "Сайт Fibo серверіне қосылмаған. Кіру және тіркелу әзірге қолжетімсіз.",
   "common.language": "Тіл",
   "common.theme": "Тақырып",
   "unit.h": "сағ",

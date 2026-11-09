@@ -109,12 +109,19 @@ export function OnboardingPage() {
 
   const serverError =
     register.error instanceof ApiError
-      ? register.error.status === 409
-        ? t("acc.emailTaken")
-        : register.error.status === 0 || register.error.status >= 500
-          ? t("common.offline")
-          : t("common.error")
-      : null
+      ? register.error.code === "api_unavailable" ||
+        register.error.code === "invalid_response" ||
+        register.error.status === 404 ||
+        register.error.status === 405
+        ? t("auth.apiUnavailable")
+        : register.error.status === 409
+          ? t("acc.emailTaken")
+          : register.error.status === 0 || register.error.status >= 500
+            ? t("common.offline")
+            : t("common.error")
+      : register.error
+        ? t("common.error")
+        : null
 
   return (
     <div className="flex min-h-svh flex-col bg-background">
@@ -133,14 +140,14 @@ export function OnboardingPage() {
             <span className="num">
               {t("onb.step", { n: step + 1, total: STEPS.length })}
             </span>
-            {step < 3 && (
+            {
               <Link
-                to="/login"
+                to={`/login${account.email.trim() ? `?email=${encodeURIComponent(account.email.trim())}` : ""}`}
                 className="transition-colors hover:text-foreground"
               >
                 {t("onb.haveAccount")}
               </Link>
-            )}
+            }
           </div>
           <Progress value={((step + 1) / STEPS.length) * 100} className="h-1" />
         </div>

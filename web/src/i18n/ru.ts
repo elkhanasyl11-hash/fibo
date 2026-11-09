@@ -13,6 +13,7 @@ export const ru = {
   "common.retry": "Повторить",
   "common.error": "Не получилось. Попробуйте ещё раз",
   "common.offline": "Нет связи с сервером Fibo",
+  "auth.apiUnavailable": "Сайт не подключён к серверу Fibo. Вход и регистрация пока недоступны.",
   "common.language": "Язык",
   "common.theme": "Тема",
   "unit.h": "ч",

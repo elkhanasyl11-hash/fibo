@@ -41,6 +41,36 @@ describe("api wrapper", () => {
     })
   })
 
+  it("rejects a static-host HTML fallback instead of treating it as a sign-in response", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(
+        async () =>
+          new Response("<!doctype html><html></html>", {
+            status: 200,
+            headers: { "Content-Type": "text/html; charset=utf-8" },
+          })
+      )
+    )
+    await expect(
+      api("/auth/login", { method: "POST", json: {} })
+    ).rejects.toMatchObject({
+      code: "api_unavailable",
+    })
+  })
+
+  it("reports malformed JSON as an API error", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => new Response("broken", { status: 200 }))
+    )
+    await expect(
+      api("/auth/register", { method: "POST", json: {} })
+    ).rejects.toMatchObject({
+      code: "invalid_response",
+    })
+  })
+
   it("sends JSON and the sign-in token", async () => {
     localStorage.setItem("fibo.token", "abc")
     const fetchMock = respond({ ok: true }, 200)

@@ -40,3 +40,18 @@ e2e/                Playwright scenarios
 
 Screen to endpoint table and what is not on the backend: `../docs/frontend-inventory.md`.
 Decisions: `../docs/frontend-decisions.md`.
+# Production on Vercel
+
+Use `web` as the project's Root Directory. This deploys the web interface only;
+the Python backend needs a separate host with persistent database and media storage.
+
+Set `VITE_API_URL` in Vercel to the backend's public HTTPS origin (without `/api/v1`).
+Set `FIBO_CORS_ORIGINS` on the backend to a JSON list containing the exact public
+frontend origin. Rebuild the frontend after changing `VITE_API_URL`.
+
+The Vercel build checks the API and database before publishing. Do not deploy
+`dist` directly: uploading static files skips that check. Test account creation,
+sign-in, and page reload against the deployed API before sharing the site.
+
+For this checkout, `./scripts/dev.sh` from the repository root starts the connected
+frontend at http://localhost:5174. Another project may already occupy port 5173.

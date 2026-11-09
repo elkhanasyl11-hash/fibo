@@ -1,7 +1,7 @@
 // Session-authenticated API requests; the dev server forwards /api to the backend.
 
 // Same origin by default; VITE_API_URL can point to another API origin.
-const BASE = `${import.meta.env.VITE_API_URL ?? ""}/api/v1`
+const BASE = `${(import.meta.env.VITE_API_URL ?? "").replace(/\/+$/, "")}/api/v1`
 const TOKEN_KEY = "fibo.token"
 let memoryToken: string | null = null
 let memoryOnly = false
@@ -107,9 +107,25 @@ export async function api<T>(
       timeout.aborted ? "Request timed out" : "Server is unavailable"
     )
   }
+  // Static hosts can return SPA HTML with status 200 when the API is missing.
+  if (response.headers.get("content-type")?.includes("text/html")) {
+    throw new ApiError(
+      response.status,
+      "api_unavailable",
+      "Fibo API is not connected"
+    )
+  }
   if (!response.ok) throw await parseError(response)
   if (response.status === 204) return undefined as T
-  return (await response.json()) as T
+  try {
+    return (await response.json()) as T
+  } catch {
+    throw new ApiError(
+      response.status,
+      "invalid_response",
+      "Invalid response from Fibo API"
+    )
+  }
 }
 
 export function query(
