@@ -1,0 +1,7 @@
+# Optional heavy models, loaded lazily by the AI service only when configured:
+#   faster-whisper      ASR_PROVIDER=faster_whisper (local speech recognition, downloads WHISPER_MODEL)
+#   sentence-transformers + torch   manual search embeddings (multilingual-e5-small)
+#   panns-inference / transformers  audio embedders panns_cnn14 / ast (mfcc_baseline needs none of these)
+# Not verified on this laptop (no space for torch); install with: pip install -r requirements-ml.txt
+faster-whisper
+sentence-transformers

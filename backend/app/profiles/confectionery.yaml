@@ -1,0 +1,26 @@
+# Industry profile: confectionery. The AI4I model does NOT apply.
+id: confectionery
+title_ru: Кондитерский цех
+title_kk: Кондитер цехы
+default_air_temperature_k: 298
+model_applicable: false
+risk_weights: { p_model: 0, s_audio: 0.25, s_visual: 0.2, s_overdue: 0.3, s_history: 0.25 }
+reading_ranges:
+  temperature_c: [-30, 300]
+  load_pct: [0, 150]
+  operating_hours: [0, 200000]
+  humidity_pct: [0, 100]
+  chamber_temperature_c: [-30, 300]
+extra_fields:
+  - { name: humidity_pct, title_ru: Влажность в цехе, title_kk: Цехтағы ылғалдылық, unit: "%" }
+  - { name: chamber_temperature_c, title_ru: Температура камеры, title_kk: Камера температурасы, unit: "°C" }
+equipment_catalog:
+  - { type: planetary_mixer, title_ru: Планетарный миксер, title_kk: Планетарлық миксер, default_criticality: 3 }
+  - { type: tempering_machine, title_ru: Темперирующая машина, title_kk: Темперлеу машинасы, default_criticality: 3 }
+  - { type: convection_oven, title_ru: Конвекционная печь, title_kk: Конвекциялық пеш, default_criticality: 2 }
+  - { type: blast_chiller, title_ru: Шкаф шоковой заморозки, title_kk: Шок мұздату шкафы, default_criticality: 2 }
+safety_keywords_extra: [запах газа, пахнет газом, газ иісі]
+assistant_context_ru: >
+  Кондитерский цех. Типичные отказы: перегрев двигателя миксера, сбой темперирования шоколада,
+  неисправность вентилятора конвекции, обмерзание испарителя. Учитывай потерю партии продукции.
+  Отвечай кратко, по шагам, со ссылками на страницы паспорта.

@@ -1,0 +1,88 @@
+# Fibo: backend (API + ML) and Telegram bot.   Usage:  cp .env.example .env  (set the bot token)
+#                                                     docker compose up --build
+# The backend reads .env (it calls OpenAI itself in builtin mode, so it needs FIBO_LLM_API_KEY); the bot and
+# the AI service get only their own variables. Values under `environment` win over .env. Only the backend writes the SQLite file in ./data.
+# AI service (sidecar):  docker compose --profile ai up --build  and FIBO_AI_PROVIDER=sidecar in .env.
+# It needs the AI service source + Dockerfile in ./ai (not in this repository, decision D73); without
+# the profile the backend runs on its builtin modules. The AI service has no published port: only the
+# backend reaches it, on the internal network, at http://ai:8001.
+services:
+  backend:
+    build:
+      context: ./backend
+      args:
+        PRELOAD_EMBEDDINGS: ${FIBO_PRELOAD_EMBEDDINGS:-false}
+    env_file: .env
+    environment:
+      FIBO_DATA_DIR: /app/data
+      FIBO_DATABASE_URL: sqlite+aiosqlite:////app/data/sqlite/fibo.db
+      FIBO_RISK_MODEL_DIR: /app/ml/artifacts
+      FIBO_MODEL_CACHE_DIR: /app/model-cache
+    volumes:
+      - ./data:/app/data
+    depends_on:
+      ai:
+        condition: service_healthy
+        required: false  # without --profile ai the backend starts alone and uses the builtin modules
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/v1/health', timeout=4)"]
+      interval: 15s
+      timeout: 5s
+      start_period: 60s
+      retries: 5
+    restart: unless-stopped
+
+  bot:
+    build: ./bot
+    # Only what the bot needs — no env_file, so AI keys and the dashboard key never reach this container.
+    environment:
+      FIBO_API_URL: http://backend:8000/api/v1
+      FIBO_TELEGRAM_BOT_TOKEN: ${FIBO_TELEGRAM_BOT_TOKEN:?set FIBO_TELEGRAM_BOT_TOKEN in .env}
+      FIBO_BOT_SHARED_SECRET: ${FIBO_BOT_SHARED_SECRET:?set FIBO_BOT_SHARED_SECRET in .env}
+      FIBO_API_TIMEOUT_S: ${FIBO_API_TIMEOUT_S:-30}
+      FIBO_LOG_LEVEL: ${FIBO_LOG_LEVEL:-INFO}
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+
+  ai:
+    profiles: ["ai"]
+    build: ./ai
+    # Only the AI service's own variables; it never sees the bot token or the backend database.
+    environment:
+      AI_STUB_MODE: ${AI_STUB_MODE:-false}
+      AI_SERVICE_TOKEN: ${AI_SERVICE_TOKEN:-}
+      LLM_PROVIDER: ${LLM_PROVIDER:-openai}
+      LLM_MODEL: ${LLM_MODEL:-gpt-6-luna}
+      LLM_VISION_MODEL: ${LLM_VISION_MODEL:-gpt-6-luna}
+      LLM_REASONING_EFFORT: ${LLM_REASONING_EFFORT:-low}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      FIBO_SHARED_DIR: /app/data/media
+    volumes:
+      - ./data/media:/app/data/media:ro  # the backend's uploads, read-only for the AI service
+      - ./data/ai:/data/ai               # the AI service's own artifacts (baselines, manual indexes)
+    expose:
+      - "8001"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8001/readyz', timeout=4)"]
+      interval: 15s
+      timeout: 5s
+      start_period: 90s
+      retries: 5
+    restart: unless-stopped
+
+  # Web dashboard (nginx). Optional: docker compose --profile web up
+  web:
+    build: ./web
+    profiles: ["web"]
+    environment:
+      FIBO_API_UPSTREAM: http://backend:8000
+      FIBO_DASHBOARD_API_KEY: ${FIBO_DASHBOARD_API_KEY:-}
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+    restart: unless-stopped

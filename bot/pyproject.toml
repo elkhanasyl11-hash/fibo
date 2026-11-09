@@ -1,0 +1,19 @@
+# Tool configuration only (ruff + pytest). Dependencies live in requirements*.txt.
+[tool.ruff]
+line-length = 110
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "ASYNC"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["bot", "tests"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+testpaths = ["tests"]
+
+[tool.ruff.lint.per-file-ignores]
+# A translation table: one message per line reads better than wrapped strings.
+"bot/texts.py" = ["E501"]

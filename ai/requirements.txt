@@ -1,0 +1,18 @@
+# Fibo AI service runtime dependencies (core). Versions = the ones verified on the team laptop with the
+# backend (same numpy/pandas/sklearn stack). Heavy optional models are in requirements-ml.txt.
+fastapi==0.162.2
+uvicorn[standard]==0.54.0
+pydantic==2.14.3
+pydantic-settings==2.16.2
+httpx==0.28.1
+numpy==2.4.6
+pandas==3.1.1
+scipy==1.17.1
+scikit-learn==1.9.1
+shap==0.51.0
+joblib==1.6.0
+matplotlib==3.11.2
+pillow==13.0.0
+pyyaml==6.0.3
+rapidfuzz==3.14.3
+pymupdf==2.1

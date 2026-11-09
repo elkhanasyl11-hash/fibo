@@ -1,0 +1,2 @@
+# Keep runtime data out of release archives (git archive); the app creates data/ itself.
+/data export-ignore

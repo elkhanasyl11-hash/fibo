@@ -1,0 +1,47 @@
+{
+  "model_version": "xgb-ai4i-dc6630cd",
+  "features": [
+    "type_L",
+    "type_M",
+    "type_H",
+    "air_temperature_k",
+    "process_temperature_k",
+    "rotational_speed_rpm",
+    "torque_nm",
+    "tool_wear_min"
+  ],
+  "training_ranges": {
+    "type_L": [
+      0.0,
+      1.0
+    ],
+    "type_M": [
+      0.0,
+      1.0
+    ],
+    "type_H": [
+      0.0,
+      1.0
+    ],
+    "air_temperature_k": [
+      295.3,
+      304.5
+    ],
+    "process_temperature_k": [
+      305.7,
+      313.8
+    ],
+    "rotational_speed_rpm": [
+      1168.0,
+      2886.0
+    ],
+    "torque_nm": [
+      3.8,
+      76.6
+    ],
+    "tool_wear_min": [
+      0.0,
+      253.0
+    ]
+  }
+}

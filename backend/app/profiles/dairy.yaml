@@ -1,0 +1,26 @@
+# Industry profile: dairy. The AI4I model does NOT apply.
+id: dairy
+title_ru: Молочный цех
+title_kk: Сүт цехы
+default_air_temperature_k: 298
+model_applicable: false
+risk_weights: { p_model: 0, s_audio: 0.3, s_visual: 0.1, s_overdue: 0.35, s_history: 0.25 }
+reading_ranges:
+  temperature_c: [-30, 150]
+  load_pct: [0, 150]
+  operating_hours: [0, 200000]
+  pasteurization_temperature_c: [0, 150]
+  chamber_temperature_c: [-30, 40]
+extra_fields:
+  - { name: pasteurization_temperature_c, title_ru: Температура пастеризации, title_kk: Пастерлеу температурасы, unit: "°C" }
+  - { name: chamber_temperature_c, title_ru: Температура холодильной камеры, title_kk: Тоңазытқыш камера температурасы, unit: "°C" }
+equipment_catalog:
+  - { type: pasteurizer, title_ru: Пастеризатор, title_kk: Пастерлегіш, default_criticality: 3 }
+  - { type: separator, title_ru: Сепаратор, title_kk: Сепаратор, default_criticality: 3 }
+  - { type: cooling_tank, title_ru: Танк-охладитель молока, title_kk: Сүт салқындатқыш танкі, default_criticality: 2 }
+  - { type: filling_machine, title_ru: Фасовочный автомат, title_kk: Қаптау автоматы, default_criticality: 2 }
+safety_keywords_extra: [утечка аммиака, запах аммиака, ожог паром, пар бьёт]
+assistant_context_ru: >
+  Молочный цех. Типичные отказы: недогрев при пастеризации, вибрация сепаратора, износ
+  уплотнений насосов, отказ холодильного агрегата. Учитывай потерю партии продукции.
+  Отвечай кратко, по шагам, со ссылками на страницы паспорта.

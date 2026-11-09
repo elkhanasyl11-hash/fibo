@@ -1,0 +1,37 @@
+# Tool configuration only (ruff + pytest). Dependencies live in requirements*.txt.
+[tool.ruff]
+line-length = 110
+target-version = "py311"
+extend-exclude = ["alembic/versions", "app/modules/ai_gateway/client.py"]  # client.py = byte copy of ai/fibo_ai_client.py, formatted and linted there (120 cols)
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "ASYNC"]
+
+[tool.ruff.lint.isort]
+# `alembic` is the library; our local alembic/ folder only holds migration scripts.
+known-first-party = ["app", "tests", "ml"]
+known-third-party = ["alembic"]
+
+[tool.ruff.lint.flake8-bugbear]
+# FastAPI's documented style: Depends()/Query()/Header()/... as parameter defaults.
+extend-immutable-calls = [
+    "fastapi.Depends", "fastapi.Query", "fastapi.Header", "fastapi.File", "fastapi.Form", "fastapi.Path",
+]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "session"
+asyncio_default_test_loop_scope = "session"
+testpaths = ["tests"]
+# shap 0.51 calls a matplotlib API that matplotlib plans to deprecate; not our code.
+filterwarnings = [
+    "ignore::PendingDeprecationWarning:shap.*",
+    # PyMuPDF's SWIG bindings trigger this on Python 3.11+; not our code.
+    "ignore:builtin type .* has no __module__ attribute:DeprecationWarning",
+]
+
+[tool.ruff.lint.per-file-ignores]
+# Answer templates of the mock chat model: one sentence per line reads better than wrapped strings.
+"app/modules/assistant/mock_chat.py" = ["E501"]
+"app/modules/ai_gateway/messages.py" = ["E501"]  # one card text per line, easier for translators
+"app/modules/web_ai/*.py" = ["E501"]  # ru/kk text pairs, one per line for translators

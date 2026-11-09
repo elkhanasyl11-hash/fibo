@@ -1,0 +1,26 @@
+# Runtime data (SQLite, media uploads, Chroma index) never goes into git.
+data/*
+!data/.gitkeep
+.env
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.DS_Store
+# Build output (release zips)
+dist/
+
+# Local backend database and signing key
+backend/data/
+
+# Frontend dependencies and deployment-local state
+node_modules/
+.vercel/
+*.tsbuildinfo
+.coverage
+htmlcov/
+playwright-report/
+test-results/
+.env.*
+!.env.example

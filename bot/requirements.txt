@@ -1,0 +1,4 @@
+# Fibo Telegram bot. It has no database and no ML: it only talks to the backend over HTTP.
+aiogram==3.31.0
+httpx==0.28.1
+pydantic-settings==2.16.2

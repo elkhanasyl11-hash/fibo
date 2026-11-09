@@ -1,0 +1,39 @@
+# Fibo backend runtime dependencies.
+# Libraries are added in the phase that first uses them (audio / RAG / vision come later).
+fastapi==0.162.2
+uvicorn[standard]==0.54.0
+sqlalchemy[asyncio]==2.1.8
+aiosqlite==0.22.1
+alembic==1.20.1
+pydantic==2.14.3
+pydantic-settings==2.16.2
+pyyaml==6.0.3
+httpx==0.28.1
+python-multipart==0.0.33
+# Phase 3: risk model (training + inference)
+numpy==2.4.6
+pandas==3.1.1
+scikit-learn==1.9.1
+# Same library: Linux uses the CPU-only build (the default Linux wheel pulls 350 MB of NVIDIA GPU
+# libraries); xgboost-cpu has no macOS wheel, so macOS uses the regular package.
+xgboost==3.2.0; sys_platform == "darwin"
+xgboost-cpu==3.2.0; sys_platform == "linux"
+shap==0.51.0
+joblib==1.6.0
+scipy==1.17.1
+# Phase 4: speech, AI calls
+soundfile==0.14.0
+webrtcvad-wheels==2.0.14.post1
+tenacity==9.2.1
+# Phase 5: machine sound features, spectrogram, photo baseline
+librosa==0.11.0
+matplotlib==3.11.2
+pillow==13.0.0
+# Phase 6: photo quality checks
+opencv-python-headless==5.0.0.93
+# Phase 7: manual search (RAG). e5 runs on onnxruntime, no PyTorch (docs/decisions.md D51)
+pymupdf==2.1
+chromadb==1.5.9
+onnxruntime==1.31.1
+tokenizers==0.23.3
+huggingface-hub==2.4.0

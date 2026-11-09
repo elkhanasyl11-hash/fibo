@@ -1,0 +1,27 @@
+# Industry profile: metalworking (CNC mills, lathes, saws). The AI4I-trained model applies here.
+# Kazakh titles are drafts and must be checked by a native speaker (see docs/decisions.md).
+id: metalworking
+title_ru: Металлообработка
+title_kk: Металл өңдеу
+nominal_torque_nm: 60          # default for load_pct -> torque mapping
+default_air_temperature_k: 298
+model_applicable: true         # AI4I model is used for this profile
+risk_weights: { p_model: 0.4, s_audio: 0.2, s_visual: 0.15, s_overdue: 0.15, s_history: 0.1 }
+reading_ranges:
+  spindle_rpm: [0, 30000]
+  load_pct: [0, 150]
+  temperature_c: [-10, 150]
+  operating_hours: [0, 200000]
+extra_fields: []
+equipment_catalog:
+  - { type: cnc_mill, title_ru: Фрезерный станок с ЧПУ, title_kk: СББ фрезерлік станогы, default_criticality: 3 }
+  - { type: lathe, title_ru: Токарный станок, title_kk: Токарлық станок, default_criticality: 2 }
+  - { type: band_saw, title_ru: Ленточнопильный станок, title_kk: Таспалы ара станогы, default_criticality: 1 }
+  - { type: compressor, title_ru: Компрессор, title_kk: Компрессор, default_criticality: 2 }
+safety_keywords_extra: [стружка намоталась, заклинило шпиндель]
+assistant_context_ru: >
+  Цех металлообработки. Типичные отказы: износ инструмента, подшипники шпинделя,
+  люфт направляющих, перегрев. Отвечай кратко, по шагам, со ссылками на страницы паспорта.
+assistant_context_kk: >
+  Металл өңдеу цехы. Жиі кездесетін ақаулар: құралдың тозуы, шпиндель мойынтіректері,
+  бағыттауыштардың саңылауы, қызып кету. Қысқа, қадам бойынша жауап бер.

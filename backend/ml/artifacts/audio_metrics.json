@@ -1,0 +1,84 @@
+{
+  "dataset": "dcase2020-slider",
+  "method": "per-feature z-score vs. baseline, audio_z = sqrt(mean(z^2))",
+  "features": [
+    "band_0",
+    "band_1",
+    "band_2",
+    "band_3",
+    "band_4",
+    "band_5",
+    "band_6",
+    "band_7",
+    "rms_db",
+    "centroid_hz",
+    "rolloff_hz",
+    "flatness",
+    "zcr",
+    "crest_factor"
+  ],
+  "thresholds": {
+    "warning": 2.0,
+    "critical": 3.0
+  },
+  "max_train_clips_per_id": null,
+  "machines": {
+    "id_00": {
+      "train_clips": 60,
+      "test_normal": 60,
+      "test_anomaly": 99,
+      "roc_auc": 0.8164,
+      "normal_below_warning": 0.95,
+      "anomaly_at_warning": 0.0202,
+      "anomaly_above_critical": 0.0,
+      "normal_z_median": 0.746,
+      "anomaly_z_median": 1.233,
+      "normal_z_p95": 1.833,
+      "normal_z_p99": 2.23,
+      "roc_auc_max_abs_z": 0.7823
+    },
+    "id_02": {
+      "train_clips": 60,
+      "test_normal": 60,
+      "test_anomaly": 77,
+      "roc_auc": 0.6829,
+      "normal_below_warning": 0.9667,
+      "anomaly_at_warning": 0.0519,
+      "anomaly_above_critical": 0.0,
+      "normal_z_median": 0.644,
+      "anomaly_z_median": 1.011,
+      "normal_z_p95": 1.727,
+      "normal_z_p99": 2.145,
+      "roc_auc_max_abs_z": 0.644
+    },
+    "id_04": {
+      "train_clips": 60,
+      "test_normal": 60,
+      "test_anomaly": 60,
+      "roc_auc": 0.6129,
+      "normal_below_warning": 0.9667,
+      "anomaly_at_warning": 0.0667,
+      "anomaly_above_critical": 0.0167,
+      "normal_z_median": 0.678,
+      "anomaly_z_median": 0.77,
+      "normal_z_p95": 1.438,
+      "normal_z_p99": 2.297,
+      "roc_auc_max_abs_z": 0.5615
+    },
+    "id_06": {
+      "train_clips": 60,
+      "test_normal": 60,
+      "test_anomaly": 60,
+      "roc_auc": 0.4164,
+      "normal_below_warning": 1.0,
+      "anomaly_at_warning": 0.0167,
+      "anomaly_above_critical": 0.0,
+      "normal_z_median": 0.74,
+      "anomaly_z_median": 0.667,
+      "normal_z_p95": 1.574,
+      "normal_z_p99": 1.752,
+      "roc_auc_max_abs_z": 0.4236
+    }
+  },
+  "mean_roc_auc": 0.6321
+}

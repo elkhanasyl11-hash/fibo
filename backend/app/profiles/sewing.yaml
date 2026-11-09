@@ -1,0 +1,21 @@
+# Industry profile: sewing workshop. The AI4I model does NOT apply; sound and photos matter most.
+id: sewing
+title_ru: Швейный цех
+title_kk: Тігін цехы
+default_air_temperature_k: 298
+model_applicable: false
+risk_weights: { p_model: 0, s_audio: 0.35, s_visual: 0.3, s_overdue: 0.2, s_history: 0.15 }
+reading_ranges:
+  spindle_rpm: [0, 10000]
+  temperature_c: [-10, 250]
+  operating_hours: [0, 200000]
+extra_fields: []
+equipment_catalog:
+  - { type: lockstitch_machine, title_ru: Промышленная швейная машина, title_kk: Өнеркәсіптік тігін машинасы, default_criticality: 2 }
+  - { type: overlock, title_ru: Оверлок, title_kk: Оверлок, default_criticality: 2 }
+  - { type: cutting_machine, title_ru: Раскройная машина, title_kk: Пішу машинасы, default_criticality: 3 }
+  - { type: steam_press, title_ru: Парогенератор / пресс, title_kk: Бу генераторы / пресс, default_criticality: 1 }
+safety_keywords_extra: [палец под иглой, ожог паром]
+assistant_context_ru: >
+  Швейный цех. Типичные отказы: пропуск стежков, обрыв нити, износ челнока и игловодителя,
+  стук механизма, утечка пара. Отвечай кратко, по шагам, со ссылками на страницы паспорта.

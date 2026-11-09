@@ -1,0 +1,28 @@
+# Industry profile: bakery. The AI4I model does NOT apply (no spindle/torque/tool wear);
+# the risk index uses sound, photos, maintenance and incident history only.
+id: bakery
+title_ru: Пекарня
+title_kk: Наубайхана
+default_air_temperature_k: 298
+model_applicable: false
+risk_weights: { p_model: 0, s_audio: 0.3, s_visual: 0.15, s_overdue: 0.3, s_history: 0.25 }
+reading_ranges:
+  temperature_c: [-10, 350]
+  load_pct: [0, 150]
+  operating_hours: [0, 200000]
+  humidity_pct: [0, 100]
+  chamber_temperature_c: [-10, 350]
+extra_fields:
+  - { name: humidity_pct, title_ru: Влажность в камере, title_kk: Камерадағы ылғалдылық, unit: "%" }
+  - { name: chamber_temperature_c, title_ru: Температура камеры, title_kk: Камера температурасы, unit: "°C" }
+equipment_catalog:
+  - { type: dough_mixer, title_ru: Тестомес, title_kk: Қамыр илегіш, default_criticality: 3 }
+  - { type: deck_oven, title_ru: Подовая печь, title_kk: Табанды пеш, default_criticality: 3 }
+  - { type: proofer, title_ru: Расстоечный шкаф, title_kk: Қамыр ашытатын шкаф, default_criticality: 2 }
+  - { type: dough_sheeter, title_ru: Тестораскаточная машина, title_kk: Қамыр жайғыш машина, default_criticality: 2 }
+  - { type: refrigerator, title_ru: Холодильная камера, title_kk: Тоңазытқыш камера, default_criticality: 1 }
+safety_keywords_extra: [запах газа, пахнет газом, газ иісі]
+assistant_context_ru: >
+  Пекарня. Типичные отказы: износ ремня и подшипников тестомеса, неравномерный нагрев печи,
+  отказ ТЭНов, нарушение влажности в расстойке. Учитывай потерю партии продукции.
+  Отвечай кратко, по шагам, со ссылками на страницы паспорта.
