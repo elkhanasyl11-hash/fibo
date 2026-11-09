@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button"
 import { getToken } from "@/lib/api"
 import { Spinner } from "@/components/ui/spinner"
 import { useSession } from "@/lib/session"
+import { supabaseAuth } from "@/lib/supabase"
+import { AccountPage } from "@/pages/account"
 import { LoginPage } from "@/pages/login"
 import { MachinesPage } from "@/pages/machines"
 import { WelcomePage } from "@/pages/welcome"
@@ -83,6 +85,19 @@ const pageFallback = (
 )
 
 export function App() {
+  if (supabaseAuth)
+    return (
+      <Suspense fallback={pageFallback}>
+        <Routes>
+          <Route path="/" element={<WelcomePage />} />
+          <Route path="/start" element={<OnboardingPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/account" element={<AccountPage />} />
+          <Route path="/app/*" element={<Navigate to="/account" replace />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </Suspense>
+    )
   return (
     <Suspense fallback={pageFallback}>
       <Routes>

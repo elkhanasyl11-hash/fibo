@@ -13,6 +13,7 @@ import { api, ApiError } from "@/lib/api"
 import { useSession } from "@/lib/session"
 import type { AuthResponse, Profile } from "@/lib/types"
 import { surveyWithAnswers, useDraft } from "./draft"
+import { supabase, supabaseAuth, authMessage } from "@/lib/supabase"
 import { INDUSTRIES } from "./industries"
 import {
   accountErrors,
@@ -53,8 +54,29 @@ export function OnboardingPage() {
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const register = useMutation({
-    mutationFn: () =>
-      api<AuthResponse>("/auth/register", {
+    mutationFn: async () => {
+      if (supabaseAuth) {
+        const { data, error } = await supabase.auth.signUp({
+          email: account.email.trim(),
+          password: account.password,
+          options: {
+            emailRedirectTo: `${window.location.origin}/account`,
+            data: {
+              full_name: account.full_name.trim(),
+              language: lang,
+              workshop: {
+                name: account.workshop_name.trim(),
+                city: account.city.trim(),
+                profile: draft.profile,
+              },
+              survey: surveyWithAnswers(draft),
+            },
+          },
+        })
+        if (error) throw new Error(authMessage(error))
+        return { confirmation: !data.session }
+      }
+      return api<AuthResponse>("/auth/register", {
         method: "POST",
         json: {
           email: account.email.trim(),
@@ -68,8 +90,16 @@ export function OnboardingPage() {
           },
           survey: surveyWithAnswers(draft),
         },
-      }),
+      })
+    },
     onSuccess: (data) => {
+      if ("confirmation" in data) {
+        clear()
+        navigate(data.confirmation ? "/account?confirm=1" : "/account", {
+          replace: true,
+        })
+        return
+      }
       signIn(data)
       clear()
       navigate("/app", { replace: true })
@@ -120,7 +150,9 @@ export function OnboardingPage() {
             ? t("common.offline")
             : t("common.error")
       : register.error
-        ? t("common.error")
+        ? supabaseAuth && register.error instanceof Error
+          ? register.error.message
+          : t("common.error")
         : null
 
   return (

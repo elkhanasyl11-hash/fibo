@@ -20,6 +20,7 @@ import { useI18n } from "@/i18n"
 import { api, ApiError } from "@/lib/api"
 import { useSession } from "@/lib/session"
 import type { AuthResponse } from "@/lib/types"
+import { supabase, supabaseAuth, authMessage } from "@/lib/supabase"
 
 export function LoginPage() {
   const { t } = useI18n()
@@ -29,12 +30,25 @@ export function LoginPage() {
   const [email, setEmail] = useState(params.get("email") ?? "")
   const [password, setPassword] = useState("")
   const login = useMutation({
-    mutationFn: () =>
-      api<AuthResponse>("/auth/login", {
+    mutationFn: async () => {
+      if (supabaseAuth) {
+        const { error } = await supabase.auth.signInWithPassword({
+          email: email.trim(),
+          password,
+        })
+        if (error) throw new Error(authMessage(error))
+        return null
+      }
+      return api<AuthResponse>("/auth/login", {
         method: "POST",
         json: { email: email.trim(), password },
-      }),
+      })
+    },
     onSuccess: (data) => {
+      if (!data) {
+        navigate("/account", { replace: true })
+        return
+      }
       signIn(data)
       navigate("/app", { replace: true })
     },
@@ -54,7 +68,9 @@ export function LoginPage() {
               ? t("common.offline")
               : t("common.error")
       : login.error
-        ? t("common.error")
+        ? supabaseAuth && login.error instanceof Error
+          ? login.error.message
+          : t("common.error")
         : null
   return (
     <div className="flex min-h-svh flex-col bg-background">

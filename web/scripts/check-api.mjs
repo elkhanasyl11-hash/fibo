@@ -1,9 +1,15 @@
+import { readFileSync } from "node:fs"
 // Vercel hosts this directory as a static app; its Python API must live elsewhere.
 const origin = process.env.VITE_API_URL?.trim().replace(/\/+$/, "")
 if (!origin) {
-  throw new Error(
-    "Set VITE_API_URL to the public Fibo backend origin before deploying. A frontend-only deployment cannot register or sign in users."
-  )
+  const config = JSON.parse(readFileSync(new URL("../supabase.config.json", import.meta.url), "utf8"))
+  const response = await fetch(`${process.env.VITE_SUPABASE_URL || config.url}/auth/v1/settings`, {
+    headers: { apikey: process.env.VITE_SUPABASE_PUBLISHABLE_KEY || config.publishableKey },
+    signal: AbortSignal.timeout(15_000),
+  })
+  if (!response.ok) throw new Error(`Supabase Auth is unavailable: HTTP ${response.status}`)
+  console.log("Supabase Auth is ready. Equipment features require the Fibo backend.")
+  process.exit(0)
 }
 const url = new URL(origin)
 if (

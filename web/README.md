@@ -55,3 +55,21 @@ sign-in, and page reload against the deployed API before sharing the site.
 
 For this checkout, `./scripts/dev.sh` from the repository root starts the connected
 frontend at http://localhost:5174. Another project may already occupy port 5173.
+
+## Supabase login on Vercel
+
+When `VITE_API_URL` is absent in a production build, authentication uses the public
+Supabase project in `supabase.config.json`. The Supabase SDK stores and refreshes
+the session. `/account` displays the authenticated user's profile and signup
+metadata; it does not fabricate Python user/workshop IDs or send Supabase tokens
+to the Python API. Equipment and analytics require the Python backend.
+
+Set Supabase Auth → URL Configuration → Site URL to
+`https://fibo-web-nine.vercel.app` and allow
+`https://fibo-web-nine.vercel.app/account` as a redirect URL. Email confirmation
+remains enabled; users can return to `/login` after confirming their email.
+Supabase accounts and existing Python accounts are separate.
+
+For a local Supabase preview set `VITE_AUTH_PROVIDER=supabase`.
+Optional overrides: `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY`.
+Only publishable keys belong in frontend configuration.
